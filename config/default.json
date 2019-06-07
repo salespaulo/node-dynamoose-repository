@@ -1,0 +1,16 @@
+{
+    "aws": {
+        "dynamodb": {
+            "url": "http://localhost:8000",
+            "options": {
+                "create": true,
+                "update": true,
+                "waitForActive": false,
+                "waitForActiveTimeout": 1800,
+                "serverSideEncryption": false,
+                "returnRequest": true,
+                "defaultReturnValues": "ALL_NEW"
+            }
+        }
+    }
+}
