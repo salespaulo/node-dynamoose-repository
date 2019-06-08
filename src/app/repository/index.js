@@ -76,7 +76,7 @@ const setup = (modelName, modelSchema) => {
 }
 
 module.exports = (modelName, modelSchema) => {
-    model = setup(modelName, modelSchema)
+    const model = setup(modelName, modelSchema)
 
     return {
         all: async () => await execScan(model),
