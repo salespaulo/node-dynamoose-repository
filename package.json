@@ -1,6 +1,6 @@
 {
     "name": "node-dynamoose-repository",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Node.js Dynamoose Repository - Functional Model Repository using nodejs, dynamoosejs, config, winston log.",
     "main": "index.js",
     "scripts": {

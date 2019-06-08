@@ -42,25 +42,14 @@ const setupModel = (modelName, modelSchema) => {
     logger.debug(`[Dynamoose Model]: Setup ${modelName}`)
 
     try {
-        dynamoose.model(modelName, modelSchema, { ...opts })
+        return dynamoose.model(modelName, modelSchema, { ...opts })
     } catch (e) {
         logger.error('[Dynamoose Model]: Setup error:', e)
         throw e
     }
 }
 
-const getModel = modelName => {
-    const model = Object.keys(MODELS).find(name => name === modelName)
-
-    if (!model) {
-        throwNotFound(null)
-    }
-
-    return model
-}
-
 module.exports = {
     awsConfig,
-    setupModel,
-    getModel
+    setupModel
 }

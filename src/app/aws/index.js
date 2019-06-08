@@ -5,11 +5,9 @@
  * os servicos da AWS configurados.
  */
 const logger = require('node-winston-logging')
-const utils = require('node-config-utils')
 const dynamodb = require('./dynamodb')
 
 const DEFAULT_AWS_REGION = 'us-east-1'
-const { inspect } = utils.objects
 
 const credentials = () => {
     try {

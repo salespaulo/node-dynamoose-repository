@@ -67,13 +67,6 @@ const execSave = (m, obj) => {
     })
 }
 
-const connect = modelName => {
-    logger.debug(`[Repository ${modelName}]: Get DynamoDB Model`)
-    // Esta importanto com 'require' para permitir que o mock funcione
-    const aws = require('../../aws')
-    return aws().dynamodb.getModel(modelName)
-}
-
 const setup = (modelName, modelSchema) => {
     logger.debug(`[Repository ${modelName}]: Get DynamoDB Model`)
     // Esta importanto com 'require' para permitir que o mock funcione
@@ -82,14 +75,8 @@ const setup = (modelName, modelSchema) => {
     return model
 }
 
-module.exports = (modelName, modelSchema = null) => {
-    let model = null
-
-    if (modelSchema) {
-        setup(modelName, modelSchema)
-    }
-
-    model = connect(modelName)
+module.exports = (modelName, modelSchema) => {
+    model = setup(modelName, modelSchema)
 
     return {
         all: async () => await execScan(model),
