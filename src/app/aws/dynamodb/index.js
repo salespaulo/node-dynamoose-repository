@@ -42,9 +42,7 @@ const setupModel = (modelName, modelSchema) => {
     logger.debug(`[Dynamoose Model]: Setup ${modelName}`)
 
     try {
-        const model = dynamoose.model(modelName, modelSchema, { ...opts })
-        MODELS[`${modelName}`] = model
-        return MODELS[`${modelName}`]
+        dynamoose.model(modelName, modelSchema, { ...opts })
     } catch (e) {
         logger.error('[Dynamoose Model]: Setup error:', e)
         throw e

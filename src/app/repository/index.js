@@ -6,17 +6,6 @@ const logger = require('node-winston-logging')
 const utils = require('node-config-utils')
 const { inspect } = utils.objects
 
-const SCHEMA_BASE = {
-    id: {
-        type: String,
-        hashKey: true,
-        trim: true,
-        validate: value => {
-            return !!value
-        }
-    }
-}
-
 const createQuery = query => {
     logger.debug(`Repository createQuery: ${inspect(query)}`)
     const queryCreated = {}
@@ -93,13 +82,15 @@ const setup = (modelName, modelSchema) => {
     return model
 }
 
-module.exports = (modelName, modelSchema = SCHEMA_BASE) => {
+module.exports = (modelName, modelSchema = null) => {
     let model = null
-    try {
-        model = connect(modelName)
-    } catch (e) {
-        model = setup(modelName, modelSchema)
+
+    if (modelSchema) {
+        setup(modelName, modelSchema)
     }
+
+    model = connect(modelName)
+
     return {
         all: async () => await execScan(model),
         get: async key => await execGet(model, key),
