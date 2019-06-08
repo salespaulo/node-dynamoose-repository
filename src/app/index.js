@@ -12,10 +12,10 @@ const { IS_ENV_LOCALHOST, IS_ENV_PROD } = require('node-config-utils')
 const mock = require('./mock')
 const repository = require('./repository')
 
-module.exports = modelName => {
+module.exports = (modelName, modelSchema = null) => {
     if (IS_ENV_LOCALHOST() || IS_ENV_PROD()) {
         logger.info(`[Repository Model]: Getting Model Name: ${modelName}`)
-        return repository(modelName)
+        return repository(modelName, modelSchema)
     }
 
     logger.warn(`[Repository Model]: ::MOCKED:: Model Name: ${modelName}`)
