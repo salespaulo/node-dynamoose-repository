@@ -12,25 +12,18 @@ const utils = require('node-config-utils')
 const dynamoose = require('dynamoose')
 const config = require('config')
 
-const DYNAMO_OPTS = require('./options')
 const { inspect } = utils.objects
 
-const MODELS = {}
-
-const throwNotFound = modelName => {
-    throw new Error(`[Dynamoose Model]: Error: Not Found modelName: ${modelName}!`)
-}
+const DYNAMO_OPTS = () => config.get('aws.dynamodb.options').options
 
 const awsConfig = opts => {
-    const isTestLocalhost = utils.IS_ENV_LOCALHOST()
-    logger.info(`[Dynamoose AWS Config]: Config Is Localhost: ${isTestLocalhost}`)
-
-    logger.silly(`[Dynamoose AWS Config]: Config Opts: ${inspect(opts)}`)
+    const isTestLocalhost = utils.IS_ENV_LOCALHOST || utils.IS_ENV_DEV || utils.IS_ENV_TEST
+    logger.silly(`[Dynamoose Config]: AWS Opts: ${inspect(opts)}`)
     dynamoose.AWS.config.update(opts)
 
     if (isTestLocalhost) {
         const url = config.get('aws.dynamodb.url')
-        logger.warn(`[Dynamoose Localhost Config]: ::WARN:: URL: ${url}`)
+        logger.info(`[Dynamoose Config]: Localhost URL: ${url}`)
         dynamoose.local(url)
         return
     }
@@ -38,13 +31,13 @@ const awsConfig = opts => {
 
 const setupModel = (modelName, modelSchema) => {
     const opts = DYNAMO_OPTS()
-    logger.silly(`[Dynamoose Model]: Schema Setup ${inspect(modelSchema)}; opts: ${inspect(opts)}`)
-    logger.debug(`[Dynamoose Model]: Setup ${modelName}`)
+    logger.debug(`[Dynamoose Model]: Model Setup ${modelName}`)
+    logger.silly(`[Dynamoose Model]: Model Setup ${inspect(modelSchema)}; opts: ${inspect(opts)}`)
 
     try {
         return dynamoose.model(modelName, modelSchema, { ...opts })
     } catch (e) {
-        logger.error('[Dynamoose Model]: Setup error:', e)
+        logger.error('[Dynamoose Model] ::ERROR:: Model Setup Error:', e)
         throw e
     }
 }

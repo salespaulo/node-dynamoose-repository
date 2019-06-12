@@ -1,4 +1,9 @@
 {
+    "logger": {
+        "console": {
+            "level": "debug"
+        }
+    },
     "aws": {
         "dynamodb": {
             "url": "http://localhost:8000",
