@@ -8,6 +8,8 @@ const utils = require('node-config-utils')
 
 const { inspect } = utils.objects
 
+const LIMIT = 25
+
 const createQuery = query => {
     const queryCreated = {}
 
@@ -36,11 +38,17 @@ const createQuery = query => {
  * @param {Model} m Dynamoose Model
  * @param {Object} key Hash Key
  */
-const execQuery = (m, query) => {
+const execQuery = (m, query, startKey, limit) => {
     logger.debug(`[Repository ${m.name}]: DynamoDB Query Equals: ${inspect(query)}`)
 
     return new Promise((res, rej) => {
-        return m.query(createQuery(query)).exec((err, data) => {
+        let q = m.query(createQuery(query))
+
+        if (startKey) {
+            q.startAt(startKey)
+        }
+
+        return q.limit(limit).exec((err, data) => {
             if (err) rej(err)
             else res(data)
         })
@@ -53,17 +61,17 @@ const execQuery = (m, query) => {
  * @param {Model} m Dynamoose Model
  * @param {Object} key Hash Key
  */
-const execScan = (m, startAt = false) => {
+const execScan = (m, startKey, limit) => {
     logger.debug(`[Repository ${m.name}]: DynamoDB Scan`)
 
     return new Promise((res, rej) => {
         let scan = m.scan()
 
-        if (startAt) {
+        if (startKey) {
             scan = scan.startAt(startAt)
         }
 
-        return scan.exec((err, data) => {
+        return scan.limit(limit).exec((err, data) => {
             if (err) rej(err)
             else res(data)
         })
@@ -127,7 +135,7 @@ const execCreate = (m, obj) => {
 const query = m => {
     return {
         from: m.query,
-        equals: query => execQuery(m, query)
+        equals: (query, startKey = false, limit = LIMIT) => execQuery(m, query, startKey)
     }
 }
 
@@ -143,7 +151,7 @@ module.exports = (modelName, modelSchema) => {
 
     return {
         query: query(model),
-        scan: () => execScan(model),
+        scan: (startKey = false, limit = LIMIT) => execScan(model, startKey),
         get: key => execGet(model, key),
         create: obj => execCreate(model, obj),
         delete: key => execDelete(model, key)

@@ -12,6 +12,12 @@ const schemaTests = new dynamoose.Schema(
         id: {
             type: String,
             hashKey: true
+        },
+        status: {
+            type: String,
+            index: {
+                global: true
+            }
         }
     },
     {
@@ -22,6 +28,7 @@ const schemaTests = new dynamoose.Schema(
 
 describe('Testing:', () => {
     const id = uuid.v4()
+    const status = 'STATUS-' + uuid.v4()
     let model = null
 
     it('Testing Repository OK:', done => {
@@ -49,7 +56,7 @@ describe('Testing:', () => {
 
     it('Testing Create OK:', done => {
         model
-            .create({ id })
+            .create({ id, status })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
@@ -86,7 +93,7 @@ describe('Testing:', () => {
             })
     })
 
-    it('Testing Query Equals:', done => {
+    it('Testing Query Id Equals:', done => {
         model.query
             .equals({ id })
             .then(res => {
@@ -99,10 +106,38 @@ describe('Testing:', () => {
             })
     })
 
-    it('Testing Query Dynamoose:', done => {
+    it('Testing Query Status Equals:', done => {
+        model.query
+            .equals({ status })
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count > 0, 'Response.count <= 0!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Id Query Dynamoose:', done => {
         model.query
             .from('id')
             .eq(id)
+            .exec()
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count > 0, 'Response.count <= 0!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Status Query Dynamoose:', done => {
+        model.query
+            .from('status')
+            .eq(status)
             .exec()
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')

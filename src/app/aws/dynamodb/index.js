@@ -23,7 +23,7 @@ const awsConfig = opts => {
 
     if (isTestLocalhost) {
         const url = config.get('aws.dynamodb.url')
-        logger.info(`[Dynamoose Config]: Localhost URL: ${url}`)
+        logger.warn(`[Dynamoose Config]: Localhost URL: ${url}`)
         dynamoose.local(url)
         return
     }
