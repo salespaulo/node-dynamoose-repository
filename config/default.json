@@ -1,7 +1,7 @@
 {
     "logger": {
         "console": {
-            "level": "info"
+            "level": "silly"
         }
     },
     "aws": {

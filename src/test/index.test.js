@@ -28,7 +28,7 @@ const schemaTests = new dynamoose.Schema(
 
 describe('Testing:', () => {
     const id = uuid.v4()
-    const status = 'STATUS-' + uuid.v4()
+    const status = 'STATUS'
     let model = null
 
     it('Testing Repository OK:', done => {
@@ -67,6 +67,32 @@ describe('Testing:', () => {
             })
     })
 
+    it('Testing Create OK:', done => {
+        model
+            .create({ id: id + '2', status })
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(!!res.id, 'Not Found Response.id!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Create OK:', done => {
+        model
+            .create({ id: id + 3, status })
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(!!res.id, 'Not Found Response.id!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
     it('Testing Get OK:', done => {
         model
             .get({ id })
@@ -86,6 +112,19 @@ describe('Testing:', () => {
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(res.count > 0, 'Response.count <= 0!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Scan Limit 1 OK:', done => {
+        model
+            .scan(null, 1)
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count === 1, 'Response.count != 1!')
                 done()
             })
             .catch(err => {
@@ -142,6 +181,19 @@ describe('Testing:', () => {
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(res.count > 0, 'Response.count <= 0!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Status Query Equals Limit 1:', done => {
+        model.query
+            .equals({ status }, false, 1)
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count === 1, 'Response.count != 1!')
                 done()
             })
             .catch(err => {

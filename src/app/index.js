@@ -8,7 +8,7 @@ const utils = require('node-config-utils')
 
 const { inspect } = utils.objects
 
-const LIMIT = 25
+const LIMIT = 100
 
 const createQuery = query => {
     const queryCreated = {}
@@ -42,13 +42,14 @@ const execQuery = (m, query, startKey, limit) => {
     logger.debug(`[Repository ${m.name}]: DynamoDB Query Equals: ${inspect(query)}`)
 
     return new Promise((res, rej) => {
-        let q = m.query(createQuery(query))
+        let q = m.query(createQuery(query)).limit(limit)
 
         if (startKey) {
-            q.startAt(startKey)
+            logger.debug(`[Repository ${m.name}]: DynamoDB Query StartAt: ${inspect(startKey)}`)
+            q = q.startAt(startKey)
         }
 
-        return q.limit(limit).exec((err, data) => {
+        return q.exec((err, data) => {
             if (err) rej(err)
             else res(data)
         })
@@ -68,7 +69,8 @@ const execScan = (m, startKey, limit) => {
         let scan = m.scan()
 
         if (startKey) {
-            scan = scan.startAt(startAt)
+            logger.debug(`[Repository ${m.name}]: DynamoDB Scan StartAt: ${inspect(startKey)}`)
+            scan = scan.startAt(startKey)
         }
 
         return scan.limit(limit).exec((err, data) => {
@@ -135,7 +137,7 @@ const execCreate = (m, obj) => {
 const query = m => {
     return {
         from: m.query,
-        equals: (query, startKey = false, limit = LIMIT) => execQuery(m, query, startKey)
+        equals: (query, startKey = false, limit = LIMIT) => execQuery(m, query, startKey, limit)
     }
 }
 
@@ -151,7 +153,7 @@ module.exports = (modelName, modelSchema) => {
 
     return {
         query: query(model),
-        scan: (startKey = false, limit = LIMIT) => execScan(model, startKey),
+        scan: (startKey = false, limit = LIMIT) => execScan(model, startKey, limit),
         get: key => execGet(model, key),
         create: obj => execCreate(model, obj),
         delete: key => execDelete(model, key)
