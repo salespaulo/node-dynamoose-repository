@@ -152,6 +152,7 @@ module.exports = (modelName, modelSchema) => {
     const model = setup(modelName, modelSchema)
 
     return {
+        name: modelName,
         query: query(model),
         scan: (startKey = false, limit = LIMIT) => execScan(model, startKey, limit),
         get: key => execGet(model, key),
