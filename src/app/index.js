@@ -149,7 +149,7 @@ const query = m => {
 const scan = m => {
     return {
         from: m.scan,
-        all: (startKey = false, limit = LIMIT) => execScan(model, startKey, limit)
+        all: (startKey = false, limit = LIMIT) => execScan(m, startKey, limit)
     }
 }
 

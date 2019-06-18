@@ -56,7 +56,7 @@ describe('Testing:', () => {
 
     it('Testing Create OK:', done => {
         model
-            .create({ id, status })
+            .create({ id, status, attr: 'test' })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
@@ -107,8 +107,8 @@ describe('Testing:', () => {
     })
 
     it('Testing Scan OK:', done => {
-        model
-            .scan()
+        model.scan
+            .all()
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(res.count > 0, 'Response.count <= 0!')
@@ -120,8 +120,23 @@ describe('Testing:', () => {
     })
 
     it('Testing Scan Limit 1 OK:', done => {
-        model
-            .scan(null, 1)
+        model.scan
+            .all(null, 1)
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count === 1, 'Response.count != 1!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Scan attr=test:', done => {
+        model.scan
+            .from('attr')
+            .contains('test')
+            .exec()
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(res.count === 1, 'Response.count != 1!')
