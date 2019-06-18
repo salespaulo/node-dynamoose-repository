@@ -141,6 +141,18 @@ const query = m => {
     }
 }
 
+/**
+ * Query Object contains:
+ * - from: Returns Dynamoose Scan object.
+ * - equals: Execute Query Equals from query parameter pass
+ */
+const scan = m => {
+    return {
+        from: m.scan,
+        all: (startKey = false, limit = LIMIT) => execScan(model, startKey, limit)
+    }
+}
+
 const setup = (modelName, modelSchema) => {
     // Esta importanto com 'require' para permitir que o mock funcione
     const aws = require('./aws')
@@ -154,7 +166,7 @@ module.exports = (modelName, modelSchema) => {
     return {
         name: modelName,
         query: query(model),
-        scan: (startKey = false, limit = LIMIT) => execScan(model, startKey, limit),
+        scan: scan(model),
         get: key => execGet(model, key),
         create: obj => execCreate(model, obj),
         delete: key => execDelete(model, key)
