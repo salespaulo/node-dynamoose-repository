@@ -60,6 +60,8 @@ describe('Testing:', () => {
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
+                chai.assert(!!res.status, 'Not Found Response.status!')
+                chai.assert(!!res.attr, 'Not Found Response.attr!')
                 done()
             })
             .catch(err => {
@@ -69,10 +71,12 @@ describe('Testing:', () => {
 
     it('Testing Create OK:', done => {
         model
-            .create({ id: id + '2', status })
+            .create({ id: id + '2', status, attr: 'test_2' })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
+                chai.assert(!!res.status, 'Not Found Response.status!')
+                chai.assert(!!res.attr, 'Not Found Response.attr!')
                 done()
             })
             .catch(err => {
@@ -82,10 +86,11 @@ describe('Testing:', () => {
 
     it('Testing Create OK:', done => {
         model
-            .create({ id: id + 3, status })
+            .create({ id: id + '3', status })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
+                chai.assert(!!res.status, 'Not Found Response.status!')
                 done()
             })
             .catch(err => {
@@ -99,6 +104,8 @@ describe('Testing:', () => {
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
+                chai.assert(!!res.status, 'Not Found Response.status!')
+                chai.assert(!!res.attr, 'Not Found Response.attr!')
                 done()
             })
             .catch(err => {
@@ -135,7 +142,7 @@ describe('Testing:', () => {
     it('Testing Scan attr=test:', done => {
         model.scan
             .from('attr')
-            .contains('test')
+            .eq('test')
             .exec()
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
@@ -222,6 +229,53 @@ describe('Testing:', () => {
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
+                chai.assert(!!res.status, 'Not Found Response.status!')
+                chai.assert(!!res.attr, 'Not Found Response.attr!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it(`Testing Update id=${id + '2'} Update attr=test2 OK:`, done => {
+        model
+            .update({ id: id + '2' }, { attr: 'test2' })
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(!!res.id, 'Not Found Response.id!')
+                chai.assert(!!res.status, 'Not Found Response.status!')
+                chai.assert(!!res.attr, 'Not Found Response.attr!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it(`Testing Update id=${id + '3'} New attr=test OK:`, done => {
+        model
+            .update({ id: id + '3' }, { attr: 'test_' })
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(!!res.id, 'Not Found Response.id!')
+                chai.assert(!!res.status, 'Not Found Response.status!')
+                chai.assert(!!res.attr, 'Not Found Response.attr!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Scan attr=test_:', done => {
+        model.scan
+            .from('attr')
+            .contains('test_')
+            .exec()
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count > 0, 'Response.count == 0!')
                 done()
             })
             .catch(err => {

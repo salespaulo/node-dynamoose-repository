@@ -11,10 +11,13 @@ const DEFAULT_AWS_REGION = 'us-east-1'
 
 const credentials = () => {
     try {
-        const region = process.env.AWS_REGION === undefined ? DEFAULT_AWS_REGION : process.env.AWS_REGION
-        const accessKeyId = process.env.AWS_ACCESS_KEY_ID === undefined ? 'invalid' : process.env.AWS_ACCESS_KEY_ID
-        const secretAccessKey =
-            process.env.AWS_SECRET_ACCESS_KEY === undefined ? 'invalid' : process.env.AWS_SECRET_ACCESS_KEY
+        const region = process.env.AWS_REGION ? process.env.AWS_REGION : DEFAULT_AWS_REGION
+        const accessKeyId = process.env.AWS_ACCESS_KEY_ID
+            ? process.env.AWS_ACCESS_KEY_ID
+            : 'invalid'
+        const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
+            ? process.env.AWS_SECRET_ACCESS_KEY
+            : 'invalid'
 
         return { region, accessKeyId, secretAccessKey }
     } catch (e) {

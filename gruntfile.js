@@ -56,7 +56,12 @@ module.exports = function(grunt) {
     }
 
     var clean = {
-        src: ['<%= paths.target %>', path.resolve() + '/*.log', path.resolve() + '/*.txt', path.resolve() + '/*.zip']
+        src: [
+            '<%= paths.target %>',
+            path.resolve() + '/*.log',
+            path.resolve() + '/*.txt',
+            path.resolve() + '/*.zip'
+        ]
     }
 
     var copy = {
@@ -107,7 +112,10 @@ module.exports = function(grunt) {
 
     var watch = {
         js: {
-            files: ['<%= paths.app %>/**/*.js', path.join(path.resolve(), '/src', '/test', '/**/*.js')],
+            files: [
+                '<%= paths.app %>/**/*.js',
+                path.join(path.resolve(), '/src', '/test', '/**/*.js')
+            ],
             tasks: ['copy', 'mochaTest', 'notify:compile']
         }
     }
@@ -176,8 +184,20 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['env:test', 'compile', 'mochaTest', 'notify:test'])
 
     grunt.registerTask('dev', ['test', 'env:dev', 'notify:success', 'concurrent'])
-    grunt.registerTask('prod', ['env:production', 'compile', 'notify:success', 'concurrent'])
-    grunt.registerTask('localhost', ['env:localhost', 'compile', 'mochaTest', 'notify:success', 'concurrent'])
+    grunt.registerTask('prod', [
+        'env:production',
+        'compile',
+        'mochaTest',
+        'notify:success',
+        'concurrent'
+    ])
+    grunt.registerTask('localhost', [
+        'env:localhost',
+        'compile',
+        'mochaTest',
+        'notify:success',
+        'concurrent'
+    ])
 
     grunt.registerTask('default', ['test', 'env:dev', 'notify:success', 'shell:exec'])
 

@@ -119,10 +119,26 @@ const execDelete = (m, key) => {
  * @param {Object} obj Object based model schema.
  */
 const execCreate = (m, obj) => {
-    logger.debug(`[Repository ${m['name']}]: DynamoDB Save: ${inspect(obj)}`)
+    logger.debug(`[Repository ${m['name']}]: DynamoDB Create: ${inspect(obj)}`)
 
     return new Promise((res, rej) => {
         return m.create(obj, (err, data) => {
+            if (err) rej(err)
+            else res(data)
+        })
+    })
+}
+
+/**
+ * Update one item from Key and Object and returns it or error.
+ * @param {Model} m Dynamoose Model
+ * @param {Object} obj Object based model schema.
+ */
+const execUpdate = (m, key, obj) => {
+    logger.debug(`[Repository ${m['name']}]: DynamoDB Update: ${inspect(obj)}`)
+
+    return new Promise((res, rej) => {
+        return m.update(key, obj, (err, data) => {
             if (err) rej(err)
             else res(data)
         })
@@ -142,7 +158,7 @@ const query = m => {
 }
 
 /**
- * Query Object contains:
+ * Scan Object contains:
  * - from: Returns Dynamoose Scan object.
  * - equals: Execute Query Equals from query parameter pass
  */
@@ -169,6 +185,31 @@ module.exports = (modelName, modelSchema) => {
         scan: scan(model),
         get: key => execGet(model, key),
         create: obj => execCreate(model, obj),
-        delete: key => execDelete(model, key)
+        delete: key => execDelete(model, key),
+        update: async (key, obj) => {
+            const data = await execGet(model, key)
+
+            if (data) {
+                delete data.createdAt
+                delete data.updatedAt
+
+                const objKeys = Object.keys(obj)
+                const dataKeys = Object.keys(data)
+
+                dataKeys.forEach(k => {
+                    const exists = objKeys.find(okey => k === okey)
+
+                    if (!exists) {
+                        obj[k] = data[k]
+                    }
+                })
+
+                return execUpdate(model, key, obj)
+            } else {
+                logger.warn(
+                    `[Repository ${modelName}]: DynamoDB Update: Not Found Key: ${inspect(key)}!`
+                )
+            }
+        }
     }
 }

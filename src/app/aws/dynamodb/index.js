@@ -17,7 +17,7 @@ const { inspect } = utils.objects
 const DYNAMO_OPTS = () => config.get('aws.dynamodb.options').options
 
 const awsConfig = opts => {
-    const isTestLocalhost = utils.IS_ENV_LOCALHOST || utils.IS_ENV_DEV || utils.IS_ENV_TEST
+    const isTestLocalhost = utils.IS_ENV_LOCALHOST() || utils.IS_ENV_DEV() || utils.IS_ENV_TEST()
     logger.silly(`[Dynamoose Config]: AWS Opts: ${inspect(opts)}`)
     dynamoose.AWS.config.update(opts)
 
@@ -44,5 +44,6 @@ const setupModel = (modelName, modelSchema) => {
 
 module.exports = {
     awsConfig,
-    setupModel
+    setupModel,
+    dynamoose
 }
