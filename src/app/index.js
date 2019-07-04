@@ -17,7 +17,7 @@ const createQuery = query => {
         queryCreated[k] = { eq: query[k] }
     }
 
-    logger.debug(`Repository Query: ${inspect(queryCreated)}`)
+    logger.silly(`Repository Query: ${inspect(queryCreated)}`)
     return queryCreated
 }
 
@@ -39,13 +39,13 @@ const createQuery = query => {
  * @param {Object} key Hash Key
  */
 const execQuery = (m, query, startKey, limit) => {
-    logger.debug(`[Repository ${m['name']}]: DynamoDB Query Equals: ${inspect(query)}`)
+    logger.silly(`[Repository ${m['name']}]: DynamoDB Query Equals: ${inspect(query)}`)
 
     return new Promise((res, rej) => {
         let q = m.query(createQuery(query)).limit(limit)
 
         if (startKey) {
-            logger.debug(`[Repository ${m['name']}]: DynamoDB Query StartAt: ${inspect(startKey)}`)
+            logger.silly(`[Repository ${m['name']}]: DynamoDB Query StartAt: ${inspect(startKey)}`)
             q = q.startAt(startKey)
         }
 
@@ -63,13 +63,13 @@ const execQuery = (m, query, startKey, limit) => {
  * @param {Object} key Hash Key
  */
 const execScan = (m, startKey, limit) => {
-    logger.debug(`[Repository ${m['name']}]: DynamoDB Scan`)
+    logger.silly(`[Repository ${m['name']}]: DynamoDB Scan`)
 
     return new Promise((res, rej) => {
         let scan = m.scan()
 
         if (startKey) {
-            logger.debug(`[Repository ${m['name']}]: DynamoDB Scan StartAt: ${inspect(startKey)}`)
+            logger.silly(`[Repository ${m['name']}]: DynamoDB Scan StartAt: ${inspect(startKey)}`)
             scan = scan.startAt(startKey)
         }
 
@@ -87,7 +87,7 @@ const execScan = (m, startKey, limit) => {
  * @param {Object} key Hash Key
  */
 const execGet = (m, key) => {
-    logger.debug(`[Repository ${m['name']}]: DynamoDB Get Key: ${inspect(key)}`)
+    logger.silly(`[Repository ${m['name']}]: DynamoDB Get Key: ${inspect(key)}`)
 
     return new Promise((res, rej) => {
         return m.get(key, (err, data) => {
@@ -103,7 +103,7 @@ const execGet = (m, key) => {
  * @param {Object} key Hash Key
  */
 const execDelete = (m, key) => {
-    logger.debug(`[Repository ${m['name']}]: DynamoDB Delete Key: ${inspect(key)}`)
+    logger.silly(`[Repository ${m['name']}]: DynamoDB Delete Key: ${inspect(key)}`)
 
     return new Promise((res, rej) => {
         return m.delete(key, { update: true }, (err, data) => {
@@ -119,7 +119,7 @@ const execDelete = (m, key) => {
  * @param {Object} obj Object based model schema.
  */
 const execCreate = (m, obj) => {
-    logger.debug(`[Repository ${m['name']}]: DynamoDB Create: ${inspect(obj)}`)
+    logger.silly(`[Repository ${m['name']}]: DynamoDB Create: ${inspect(obj)}`)
 
     return new Promise((res, rej) => {
         return m.create(obj, (err, data) => {
@@ -135,7 +135,7 @@ const execCreate = (m, obj) => {
  * @param {Object} obj Object based model schema.
  */
 const execUpdate = (m, key, obj) => {
-    logger.debug(`[Repository ${m['name']}]: DynamoDB Update: ${inspect(obj)}`)
+    logger.silly(`[Repository ${m['name']}]: DynamoDB Update: ${inspect(obj)}`)
 
     return new Promise((res, rej) => {
         return m.update(key, obj, (err, data) => {
