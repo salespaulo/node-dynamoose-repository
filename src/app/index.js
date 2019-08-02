@@ -176,7 +176,7 @@ const setup = (modelName, modelSchema) => {
     return model
 }
 
-module.exports = (modelName, modelSchema) => {
+const createModel = (modelName, modelSchema) => {
     const model = setup(modelName, modelSchema)
 
     return {
@@ -213,3 +213,7 @@ module.exports = (modelName, modelSchema) => {
         }
     }
 }
+
+exports = module.exports = createModel
+
+exports.Utils = require('./utils')

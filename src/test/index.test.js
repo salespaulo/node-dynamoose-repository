@@ -6,6 +6,7 @@ const chai = require('chai')
 const uuid = require('uuid')
 
 const repository = require('../')
+const repositoryUtils = repository.Utils
 
 const schemaTests = new dynamoose.Schema(
     {
@@ -30,6 +31,21 @@ describe('Testing:', () => {
     const id = uuid.v4()
     const status = 'STATUS'
     let model = null
+
+    it('Testing Repository Utils toDbLastkey OK:', done => {
+        try {
+            const lastKey = repositoryUtils.toDbLastkey({ id: 'test' })
+            // console.log('>>>> lastKey', lastKey)
+
+            chai.assert(!!lastKey, 'LastKey Is Null!')
+            chai.assert(!!lastKey.id, 'LastKey.id Is Null!')
+            chai.assert(!!lastKey.id.S, 'LastKey.id.S Is Null!')
+            chai.assert(lastKey.id.S === 'test', 'LastKey.id.S Is Not test Value!')
+            done()
+        } catch (e) {
+            done(e)
+        }
+    })
 
     it('Testing Repository OK:', done => {
         model = repository('Tests', schemaTests)
