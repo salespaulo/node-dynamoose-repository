@@ -207,8 +207,11 @@ const createModel = (modelName, modelSchema) => {
                 return execUpdate(model, key, obj)
             } else {
                 logger.warn(
-                    `[Repository ${modelName}]: DynamoDB Update: Not Found Key: ${inspect(key)}!`
+                    `[Repository ${modelName}]: Warn DynamoDB Update: Creating New - Not Found Key: ${inspect(
+                        key
+                    )}!`
                 )
+                return execCreate(model, obj)
             }
         }
     }
