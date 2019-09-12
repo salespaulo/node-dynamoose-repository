@@ -5,10 +5,13 @@
  */
 const logger = require('node-winston-logging')
 const utils = require('node-config-utils')
+const Schema = require('dynamoose').Schema
 
 const { inspect } = utils.objects
 
 const LIMIT = 100
+
+const models = {}
 
 const createQuery = query => {
     const queryCreated = {}
@@ -217,6 +220,27 @@ const createModel = (modelName, modelSchema) => {
     }
 }
 
-exports = module.exports = createModel
+const mapModel = (modelName, tableName, schema, opts = {}) => {
+    const model = createModel(tableName, new Schema(schema, opts))
+    models[`${modelName}`] = model
+    return repository()
+}
 
-exports.Utils = require('./utils')
+const getModel = modelName => {
+    const model = models[`${modelName}`]
+
+    if (!model) {
+        throw new Error(`[Repository ${modelName}]: Not Found Model: ${modelName}`)
+    }
+
+    return model
+}
+
+const repository = () => {
+    return {
+        map: mapModel,
+        get: getModel
+    }
+}
+
+exports = module.exports = repository()
