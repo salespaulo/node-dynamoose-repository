@@ -9,8 +9,9 @@ const repositoryUtils = require('../utils')
 
 const schemaTests = {
     id: repositoryUtils.hashKeyString(),
-    cliente: repositoryUtils.rangeKeyString(),
-    status: repositoryUtils.globalIndexString('status-index', 'cliente')
+    client: repositoryUtils.rangeKeyString(),
+    status: repositoryUtils.globalIndexString('status-index', 'client'),
+    type: repositoryUtils.globalIndexString('type-index', 'client')
 }
 
 const optsTests = {
@@ -20,8 +21,9 @@ const optsTests = {
 
 describe('Testing:', () => {
     const id = uuid.v4()
-    const cliente = 'Intelligir'
+    const client = 'Intelligir'
     const status = 'STATUS'
+    const type = 'TYPE'
     let model = null
 
     before(() => {
@@ -53,7 +55,7 @@ describe('Testing:', () => {
 
     it('Testing Get Empty:', done => {
         model
-            .get({ id: 'NotFound', cliente })
+            .get({ id: 'NotFound', client })
             .then(res => {
                 chai.assert(!res, 'Found Response where Id no exists!')
                 done()
@@ -65,11 +67,12 @@ describe('Testing:', () => {
 
     it('Testing Create OK:', done => {
         model
-            .create({ id, cliente, status, attr: 'test' })
+            .create({ id, client, status, type, attr: 'test' })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
                 chai.assert(!!res.status, 'Not Found Response.status!')
+                chai.assert(!!res.type, 'Not Found Response.type!')
                 chai.assert(!!res.attr, 'Not Found Response.attr!')
                 done()
             })
@@ -80,11 +83,12 @@ describe('Testing:', () => {
 
     it('Testing Create OK:', done => {
         model
-            .create({ id: id + '2', cliente, status, attr: 'test_2' })
+            .create({ id: id + '2', client, status, type, attr: 'test_2' })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
                 chai.assert(!!res.status, 'Not Found Response.status!')
+                chai.assert(!!res.type, 'Not Found Response.type!')
                 chai.assert(!!res.attr, 'Not Found Response.attr!')
                 done()
             })
@@ -95,7 +99,7 @@ describe('Testing:', () => {
 
     it('Testing Create OK:', done => {
         model
-            .create({ id: id + '3', cliente, status })
+            .create({ id: id + '3', client, status })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
@@ -109,7 +113,7 @@ describe('Testing:', () => {
 
     it('Testing Get OK:', done => {
         model
-            .get({ id, cliente })
+            .get({ id, client })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
@@ -165,7 +169,7 @@ describe('Testing:', () => {
 
     it('Testing Query Id Equals:', done => {
         model.query
-            .equals({ id, cliente })
+            .equals({ id, client })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(res.count > 0, 'Response.count <= 0!')
@@ -178,10 +182,49 @@ describe('Testing:', () => {
 
     it('Testing Query Status Equals:', done => {
         model.query
-            .equals({ status, cliente })
+            .equals({ status, client })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(res.count > 0, 'Response.count <= 0!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Query Type Equals:', done => {
+        model.query
+            .equals({ type, client })
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count > 0, 'Response.count <= 0!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Query Status and Type Equals:', done => {
+        model.query
+            .equals({ status, client, type })
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count > 0, 'Response.count <= 0!')
+                done()
+            })
+            .catch(err => {
+                done('Exception:' + utils.objects.inspect(err))
+            })
+    })
+
+    it('Testing Query Status and Type Not Found:', done => {
+        model.query
+            .equals({ status: 'NotFound', client, type })
+            .then(res => {
+                chai.assert(!!res, 'Not Found Response!')
+                chai.assert(res.count == 0, 'Response.count != 0!')
                 done()
             })
             .catch(err => {
@@ -194,8 +237,8 @@ describe('Testing:', () => {
             .from('id')
             .eq(id)
             .and()
-            .where('cliente')
-            .eq(cliente)
+            .where('client')
+            .eq(client)
             .exec()
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
@@ -212,8 +255,8 @@ describe('Testing:', () => {
             .from('status')
             .eq(status)
             .and()
-            .where('cliente')
-            .eq(cliente)
+            .where('client')
+            .eq(client)
             .exec()
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
@@ -227,7 +270,7 @@ describe('Testing:', () => {
 
     it('Testing Status Query Equals Limit 1:', done => {
         model.query
-            .equals({ status, cliente }, false, 1)
+            .equals({ status, client }, false, 1)
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(res.count === 1, 'Response.count != 1!')
@@ -240,7 +283,7 @@ describe('Testing:', () => {
 
     it('Testing Delete OK:', done => {
         model
-            .delete({ id, cliente })
+            .delete({ id, client })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
@@ -255,7 +298,7 @@ describe('Testing:', () => {
 
     it(`Testing Update id=${id + '2'} Update attr=test2 OK:`, done => {
         model
-            .update({ id: id + '2', cliente }, { attr: 'test2' })
+            .update({ id: id + '2', client }, { attr: 'test2' })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
@@ -270,7 +313,7 @@ describe('Testing:', () => {
 
     it(`Testing Update id=${id + '3'} New attr=test OK:`, done => {
         model
-            .update({ id: id + '3', cliente }, { attr: 'test_' })
+            .update({ id: id + '3', client }, { attr: 'test_' })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
