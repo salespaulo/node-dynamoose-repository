@@ -13,13 +13,13 @@ const opts = {
     saveUnknown: true
 }
 
+const schema = {
+    id: utils.hashKeyString(),
+    name: utils.requiredString()
+}
+
 repository
-    .map(
-        'model-test-1',
-        'table-test-1',
-        { id: utils.hashKeyString(), name: utils.requiredString() },
-        opts
-    )
+    .map('model-test-1', 'table-test-1', schema, opts)
     .map('model-test-2', 'table-test-2', { id: utils.hashKeyString() }, opts)
 ```
 
@@ -30,7 +30,10 @@ repository
 
 const repository = require('./setup')
 
-await repository.get('model-test-1').create({ id: 'abc123', name: 'name' })
-await repository.get('model-test-1').update({ id: 'abc123' }, { name: 'name updated' })
-await repository.get('model-test-2').get({ id: 'abc123' })
+const model1 = repository.get('model-test-1')
+const model2 = repository.get('model-test-2')
+
+await model1.create({ id: 'abc123', name: 'name' })
+await model1.update({ id: 'abc123' }, { name: 'name updated' })
+await model2.get({ id: 'abc123' })
 ```
