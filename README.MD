@@ -13,10 +13,14 @@ const opts = {
     saveUnknown: true
 }
 
-module.exports = repository
-	.map('model-test', 'table-test', { id: utils.hashKeyString() }, opts)
-	.get
-
+repository
+    .map(
+        'model-test-1',
+        'table-test-1',
+        { id: utils.hashKeyString(), name: utils.requiredString() },
+        opts
+    )
+    .map('model-test-2', 'table-test-2', { id: utils.hashKeyString() }, opts)
 ```
 
 ### Uses: index.js
@@ -26,9 +30,7 @@ module.exports = repository
 
 const repository = require('./setup')
 
-await repository('model-test').create({ id: 'abc123' })
-await repository('model-test').get({ id: 'abc123' })
-await repository('model-test').update({ id: 'abc123' }, {})
-
+await repository.get('model-test-1').create({ id: 'abc123', name: 'name' })
+await repository.get('model-test-1').update({ id: 'abc123' }, { name: 'name updated' })
+await repository.get('model-test-2').get({ id: 'abc123' })
 ```
-
