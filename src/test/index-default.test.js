@@ -99,7 +99,7 @@ describe('Testing:', () => {
 
     it('Testing Create OK:', done => {
         model
-            .create({ id: id + '3', client, status })
+            .create({ id: id + '3', client, type, status })
             .then(res => {
                 chai.assert(!!res, 'Not Found Response!')
                 chai.assert(!!res.id, 'Not Found Response.id!')
