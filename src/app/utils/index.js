@@ -49,6 +49,7 @@ const globalIndexString = (name = null, rangeKey = null, project = true, thoughp
     return {
         type: String,
         trim: true,
+        required: true,
         index: {
             name,
             rangeKey,
