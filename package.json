@@ -1,8 +1,9 @@
 {
     "name": "node-dynamoose-repository",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "Node.js Dynamoose Repository - Functional Model Repository using nodejs, dynamoosejs, config, winston log.",
     "main": "index.js",
+    "prettier": "intelligir-prettier-config",
     "scripts": {
         "compile": "grunt compile",
         "test": "grunt test",
@@ -55,6 +56,7 @@
         "grunt-contrib-clean": "*",
         "grunt-contrib-copy": "*",
         "grunt-contrib-watch": "*",
-        "grunt-contrib-compress": "*"
+        "grunt-contrib-compress": "*",
+        "intelligir-prettier-config": "0.0.1"
     }
 }

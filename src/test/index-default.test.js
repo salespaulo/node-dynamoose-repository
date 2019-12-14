@@ -30,9 +30,9 @@ describe('Testing:', () => {
         model = repository.map('Tests', 'table-tests', schemaTests, optsTests).get('Tests')
     })
 
-    it('Testing Repository Utils toDbLastkey OK:', done => {
+    it('Testing Repository Utils toDbLastKey OK:', done => {
         try {
-            const lastKey = repositoryUtils.toDbLastkey({ id: 'test' })
+            const lastKey = repositoryUtils.toDbLastKey({ id: 'test' })
 
             chai.assert(!!lastKey, 'LastKey Is Null!')
             chai.assert(!!lastKey.id, 'LastKey.id Is Null!')

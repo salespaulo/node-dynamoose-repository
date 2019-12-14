@@ -1,6 +1,6 @@
 'use strict'
 
-const toDbLastkey = objLastKey => {
+const toDbLastKey = objLastKey => {
     if (objLastKey) {
         const keys = Object.keys(objLastKey)
         const obj = {}
@@ -29,12 +29,12 @@ const toLastKey = dbLastKey => {
 
 const all = async (model, startKey, limit) => {
     if (startKey && limit) {
-        const lastKey = toDbLastkey({ id: startKey })
+        const lastKey = toDbLastKey({ id: startKey })
         return await model.scan.all(lastKey, limit)
     }
 
     if (startKey) {
-        const lastKey = toDbLastkey({ id: startKey })
+        const lastKey = toDbLastKey({ id: startKey })
         return await model.scan.all(lastKey)
     }
 
@@ -55,8 +55,8 @@ const globalIndexString = (name = null, rangeKey = null, project = true, thoughp
             rangeKey,
             project,
             thoughput,
-            global: true
-        }
+            global: true,
+        },
     }
 }
 
@@ -68,7 +68,7 @@ const optionalString = (trim = true) => {
     return {
         type: String,
         required: false,
-        trim
+        trim,
     }
 }
 
@@ -80,7 +80,7 @@ const enumString = (values = false) => {
     return {
         type: String,
         trim: true,
-        enum: values
+        enum: values,
     }
 }
 
@@ -88,7 +88,7 @@ const hashKeyString = () => {
     return {
         type: String,
         trim: true,
-        hashKey: true
+        hashKey: true,
     }
 }
 
@@ -96,12 +96,12 @@ const rangeKeyString = () => {
     return {
         type: String,
         rangeKey: true,
-        trim: true
+        trim: true,
     }
 }
 
 module.exports = {
-    toDbLastkey,
+    toDbLastKey,
     toLastKey,
     all,
     hashKeyString,
@@ -109,5 +109,5 @@ module.exports = {
     requiredString,
     optionalString,
     enumString,
-    globalIndexString
+    globalIndexString,
 }
