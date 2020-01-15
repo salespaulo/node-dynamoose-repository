@@ -1,6 +1,6 @@
 {
     "name": "node-dynamoose-repository",
-    "version": "0.1.8",
+    "version": "0.2.0",
     "description": "Node.js Dynamoose Repository - Functional Model Repository using nodejs, dynamoosejs, config, winston log.",
     "main": "index.js",
     "prettier": "intelligir-prettier-config",

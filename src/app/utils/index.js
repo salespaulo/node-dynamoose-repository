@@ -5,8 +5,8 @@ const toDbLastKey = objLastKey => {
         const keys = Object.keys(objLastKey)
         const obj = {}
 
-        keys.forEach(k => {
-            obj[k] = { S: objLastKey[k] }
+        keys.filter(k => !!objLastKey[k]).forEach(k => {
+            obj[k] = { S: objLastKey[k].toString() }
         })
 
         return obj
